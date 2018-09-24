@@ -126,8 +126,8 @@ class App extends Component {
               <table className="table ">
                 <thead className="thead-dark">
                   <tr>
-                    <th scope="col">Humanos</th>
-                    <th scope="col">Mutantes</th>
+                    <th scope="col">Human</th>
+                    <th scope="col">Mutant</th>
                     <th scope="col">Ratio</th>
                   </tr>
                 </thead>
