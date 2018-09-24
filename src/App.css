@@ -22,9 +22,13 @@
   font-size: large;
 }
 
-.col-centered{
+.col-centered {
   margin: 80px auto;
   float: none;
+}
+
+.mutant-table {
+  width: 100%;
 }
 
 @keyframes App-logo-spin {
