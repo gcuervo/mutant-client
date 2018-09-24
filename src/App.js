@@ -13,7 +13,7 @@ class App extends Component {
     };
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
-    this.getStats();
+    this.getStats = this.getStats.bind(this);
   }
 
   handleChange(event) {
@@ -21,7 +21,7 @@ class App extends Component {
   }
 
   saveDna(dna, isMutant) {
-    fetch('http://localhost:8090/mutant/dna', {
+    return fetch('http://localhost:8090/mutant/dna', {
       method: 'POST',
       mode: 'cors',
       headers: {
@@ -37,8 +37,17 @@ class App extends Component {
       .then(res => console.log(res));
   }
 
+  /*addStats() {
+    this.getStats().then(res => {
+      this.setState({ value: this.state.value,
+        ratio: res.ratio,
+        mutant: res.count_mutant_dna,
+        human: res.count_human_dna});
+    });    
+  }*/
+
   getStats() {
-    fetch('http://localhost:8090/mutant/stats', {
+    return fetch('http://localhost:8090/mutant/stats', {
       method: 'GET',
       mode: 'cors',
       headers: {
@@ -48,18 +57,21 @@ class App extends Component {
       }
     }).then(res => res.json())
       .then(res => {
-        this.setState({ value: this.state.value,
+        this.setState({
+          value: this.state.value,
           ratio: res.ratio,
           mutant: res.count_mutant_dna,
-          human: res.count_human_dna});
+          human: res.count_human_dna
+        });
         console.log(res);
+        return res;
+    }).catch((error) => {
+        console.error(error);
       });
   }
 
-  handleSubmit(event) {
-    let dna = JSON.parse(this.state.value);
-    //["ATGCGA", "CAGTGC", "TTATGT", "AGAAGG", "CCCCTA", "TCACTG"]
-    fetch('http://localhost:8090/mutant', {
+  isMutant(dna) {
+    return fetch('http://localhost:8090/mutant', {
       method: 'POST',
       mode: 'cors',
       headers: {
@@ -73,11 +85,19 @@ class App extends Component {
     }).then(res => res.json())
       .then(res => {
         console.log(res.mutant);
-        //console.log(res.mutant);
-        this.saveDna(dna, res.mutant);
-        this.getStats();
+        return res.mutant;
+    }).catch((errorRes) => {
+        console.error(errorRes);
+        return errorRes.mutant;
       });
+  }
 
+  handleSubmit(event) {
+    let dna = JSON.parse(this.state.value);
+    //["ATGCGA", "CAGTGC", "TTATGT", "AGAAGG", "CCCCTA", "TCACTG"]
+    this.isMutant(dna)
+      .then(res => this.saveDna(dna, res)
+        .then(res => this.getStats()));
   }
 
   render() {
@@ -100,6 +120,7 @@ class App extends Component {
         </div>
 
         <div className="mutant-table">
+          <button type="button" onClick={this.getStats} className="btn btn-info">Get stats</button>
           <div className="row">
             <div className="col-lg-5 col-centered col-lg-offset-4">
               <table className="table ">
