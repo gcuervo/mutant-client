@@ -37,15 +37,6 @@ class App extends Component {
       .then(res => console.log(res));
   }
 
-  /*addStats() {
-    this.getStats().then(res => {
-      this.setState({ value: this.state.value,
-        ratio: res.ratio,
-        mutant: res.count_mutant_dna,
-        human: res.count_human_dna});
-    });    
-  }*/
-
   getStats() {
     return fetch('http://localhost:8090/mutant/stats', {
       method: 'GET',
@@ -96,8 +87,8 @@ class App extends Component {
       try {
         dna = JSON.parse(this.state.value);
         this.isMutant(dna)
-        .then(res => this.saveDna(dna, res)
-          .then(res => this.getStats()));
+          .then(res => this.saveDna(dna, res)
+            .then(res => this.getStats()));
       } catch (ex) {
         console.log('Error', ex);
       }
@@ -119,7 +110,7 @@ class App extends Component {
               <div className="input-group-prepend">
                 <button className="btn btn-outline-secondary" onClick={this.handleSubmit} type="button">Send</button>
               </div>
-                <input type="text" className="form-control" placeholder="Insert DNA" value={this.state.value} onChange={this.handleChange} aria-describedby="basic-addon1" />
+              <input type="text" className="form-control" placeholder="Insert DNA" value={this.state.value} onChange={this.handleChange} aria-describedby="basic-addon1" />
             </div>
           </div>
         </div>
